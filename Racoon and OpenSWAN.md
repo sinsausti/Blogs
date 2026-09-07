@@ -1,5 +1,7 @@
 # Raccoon and OpenS/WAN: The Complete IPsec VPN Guide
 
+> **Legacy article:** Raccoon/ipsec-tools and OpenS/WAN are obsolete choices for a new deployment, and several historical examples below use algorithms such as 3DES, SHA-1, MD5, and old Diffie-Hellman groups that should not be deployed today. This article is retained for historical reference only. Use a maintained implementation such as strongSwan or Libreswan, prefer IKEv2, modern authenticated encryption, and current vendor guidance.
+
 Hey network engineers and security enthusiasts! 🔐
 
 In today's interconnected world, secure communication between networks is absolutely critical. Whether you're connecting branch offices, enabling remote access, or securing cloud communications, IPsec VPNs remain one of the most robust solutions available. Today we're diving deep into two powerful tools: **Raccoon** (the IKE daemon) and **OpenS/WAN** (the IPsec implementation).

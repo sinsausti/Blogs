@@ -1,5 +1,7 @@
 # Linux LVM and Partition Management: Your Storage Flexibility Toolkit
 
+> Storage commands can destroy data. Take a tested backup, capture the existing partition table, confirm device names with `lsblk -f`, and have recovery access before making changes. Prefer `growpart` or a partition-aware management tool when available. Deleting and recreating a partition is only safe when the starting sector remains exactly unchanged.
+
 ## What's All This About?
 
 Managing storage in Linux can feel like a puzzle sometimes, but once you understand LVM (Logical Volume Manager) and basic partition resizing, you'll wonder how you ever lived without these tools! Think of LVM as a flexible storage layer that sits between your physical disks and your filesystems, giving you the power to resize, move, and manage storage like a pro.

@@ -1,5 +1,7 @@
 # The Complete MySQL Guide: From Configuration to Production
 
+> **Version note:** Parts of this article use MySQL 5.7-era terminology and syntax. For MySQL 8.0/8.4, use `source`/`replica` terminology and current replication commands, and validate every configuration variable against the documentation for the exact installed version. The Query Cache settings shown below were removed in MySQL 8.0 and must not be copied into a modern configuration.
+
 Hey database enthusiasts! 🗄️
 
 MySQL powers millions of applications worldwide, but getting it right requires more than just installing and running it. Whether you're setting up your first production MySQL server or optimizing an existing one, this comprehensive guide covers everything you need to know to run MySQL like a pro.
@@ -31,7 +33,7 @@ interactive_timeout = 600
 # Memory Settings
 innodb_buffer_pool_size = 2G  # 70-80% of available RAM
 key_buffer_size = 256M
-query_cache_size = 128M
+# Query Cache was removed in MySQL 8.0; do not configure query_cache_size.
 tmp_table_size = 256M
 max_heap_table_size = 256M
 

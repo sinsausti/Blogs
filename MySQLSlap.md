@@ -11,11 +11,11 @@ MySQLSlap automatically creates test databases, generates sample data, runs quer
 Before we start stress-testing, let's create a dedicated user for our testing. This keeps things organized and secure:
 
 ```sql
-CREATE USER 'stress'@'192.168.10.104' IDENTIFIED BY 'S4k1l4!!';
-GRANT ALL PRIVILEGES ON *.* TO 'stress'@'192.168.10.104';
+CREATE USER 'stress'@'<load-generator-ip>' IDENTIFIED BY '<generated-password>';
+GRANT ALL PRIVILEGES ON mysqlslap.* TO 'stress'@'<load-generator-ip>';
 ```
 
-**Pro tip:** In production, you'd want to be more restrictive with privileges, but for testing purposes, this works great!
+Restrict the account to an isolated test environment and remove it when the test is complete. Never run `mysqlslap` against a production server.
 
 ## Your First Load Testing Script
 
@@ -31,11 +31,11 @@ TOTAL_TIMES=$(((60*DURATION_MINS)/FREQUENCY_SECS))
 ROUNDS=6
 SLEEP_BETWEEN_ROUND=150
 
-# Database connection settings
+# Database connection settings. Store credentials outside the script with:
+# mysql_config_editor set --login-path=loadtest --host=mysql1 --user=stress --password
 HOST="mysql1"
 PORT=3306
-USER="stress"
-PASS="S4k1l4!!"
+LOGIN_PATH="loadtest"
 
 # Run the stress test rounds
 for i in `seq 1 $ROUNDS`; do
@@ -52,8 +52,7 @@ for i in `seq 1 $ROUNDS`; do
                   --protocol=tcp \
                   --host=$HOST \
                   --port=$PORT \
-                  --user=$USER \
-                  --password=$PASS
+                  --login-path="$LOGIN_PATH"
         
         echo "sleeping... $FREQUENCY_SECS seconds"
         sleep $FREQUENCY_SECS
@@ -97,11 +96,10 @@ TOTAL_TIMES=$(((60*DURATION_MINS)/FREQUENCY_SECS))
 ROUNDS=6
 SLEEP_BETWEEN_ROUND=150
 
-# Database connection settings
+# Database connection settings. Configure this login path before running.
 HOST="mysql1"
 PORT=3306
-USER="stress"
-PASS="S4k1l4!!"
+LOGIN_PATH="loadtest"
 
 # Run the stress test rounds
 for i in `seq 1 $ROUNDS`; do
@@ -118,8 +116,7 @@ for i in `seq 1 $ROUNDS`; do
                   --protocol=tcp \
                   --host=$HOST \
                   --port=$PORT \
-                  --user=$USER \
-                  --password=$PASS
+                  --login-path="$LOGIN_PATH"
         
         echo "sleeping... $FREQUENCY_SECS seconds"
         sleep $FREQUENCY_SECS

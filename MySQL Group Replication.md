@@ -1,5 +1,7 @@
 # MySQL Group Replication: High Availability Made Simple
 
+> **Version note:** This setup uses MySQL 5.7-era options and replication terminology. Do not apply it unchanged to MySQL 8.0/8.4. Validate plugin/component requirements and use the current `SOURCE`/`REPLICA` syntax and security guidance for the exact server version. For most deployments, single-primary mode is operationally simpler than multi-primary mode.
+
 ## What is MySQL Group Replication?
 
 Imagine having multiple MySQL servers working together as a team, where if one goes down, the others keep your application running smoothly. That's exactly what MySQL Group Replication does! Available since MySQL 5.7.17, it's MySQL's built-in solution for high availability that's both powerful and free.

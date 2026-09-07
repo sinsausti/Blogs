@@ -4,7 +4,7 @@
 
 You've probably used ping before – it's that handy little tool that helps you check if a computer or server is "alive" on the network. Ping sends out a message using something called ICMP protocol and waits for a response. It's great for testing connectivity and measuring how long it takes for data to travel back and forth (that's latency).
 
-But sometimes, you might want your system to stay quiet and not respond to these ping requests. Maybe you're running a server and want to keep it a bit more under the radar, or you're just being extra cautious about security. Whatever your reason, I've got you covered!
+Sometimes a documented network policy requires a host not to answer echo requests. This does not make the host meaningfully harder to discover, and it removes a useful diagnostic signal, so leave ICMP enabled unless you have a specific requirement.
 
 ## Two Ways to Disable Ping (Pick Your Favorite!)
 
@@ -13,7 +13,7 @@ But sometimes, you might want your system to stay quiet and not respond to these
 Want to try this out without making permanent changes? Here's how:
 
 ```bash
-echo 1 > /proc/sys/net/ipv4/icmp_echo_ignore_all
+sudo sysctl -w net.ipv4.icmp_echo_ignore_all=1
 ```
 
 Your system will now ignore ping requests until you restart it. Pretty cool, right?
@@ -21,7 +21,7 @@ Your system will now ignore ping requests until you restart it. Pretty cool, rig
 Want to turn it back on? Just run:
 
 ```bash
-echo 0 > /proc/sys/net/ipv4/icmp_echo_ignore_all
+sudo sysctl -w net.ipv4.icmp_echo_ignore_all=0
 ```
 
 ### The Set-It-and-Forget-It Way (Permanent)
@@ -29,38 +29,32 @@ echo 0 > /proc/sys/net/ipv4/icmp_echo_ignore_all
 If you're sure you want this change to stick around even after reboots, here's what you'll do:
 
 ```bash
-echo "net.ipv4.icmp_echo_ignore_all = 1" >> /etc/sysctl.conf
-sysctl -p
+printf '%s\n' 'net.ipv4.icmp_echo_ignore_all = 1' | \
+  sudo tee /etc/sysctl.d/99-ignore-icmp-echo.conf
+sudo sysctl --system
 ```
 
 That's it! Your system will now permanently ignore ping requests.
 
 **Changed your mind? No worries!**
 
-1. Open up the configuration file with your favorite text editor:
-   ```bash
-   vim /etc/sysctl.conf
-   ```
+1. Remove the dedicated configuration file.
 
-2. Find and delete this line: `net.ipv4.icmp_echo_ignore_all = 1`
-
-3. Save the file and apply the changes:
+2. Apply the remaining system configuration:
    ```bash
-   sysctl -p
+   sudo rm -i /etc/sysctl.d/99-ignore-icmp-echo.conf
+   sudo sysctl --system
    ```
 
 ## A Few Things to Keep in Mind
 
-Don't worry – this won't break anything! This setting only affects ping responses. Your system will still work perfectly for everything else like web browsing, file transfers, or any other network activities.
+The setting blocks IPv4 echo replies. Other ICMP message types remain important for functions such as error reporting and path MTU discovery, so do not broadly block all ICMP traffic.
 
 Oh, and here's a pro tip: you can also block ping using your firewall settings, but that's a story for another day!
 
 ## When Should You Use This?
 
-This trick comes in handy when you're dealing with:
-- Servers that face the big, scary internet
-- Systems where you want a little extra privacy
-- Any situation where you want to be a bit more stealthy
+This setting is mainly useful for a narrow compliance requirement or a controlled test. It is not a substitute for firewall policy, patching, access control, or monitoring.
 
 Just remember, this is like putting a "Do Not Disturb" sign on your digital door – it's a nice touch for security, but you'll still want to use strong passwords, keep your system updated, and follow other good security practices.
 

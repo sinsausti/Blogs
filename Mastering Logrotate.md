@@ -1,5 +1,7 @@
 # Mastering Logrotate: Keep Your Server Logs Under Control
 
+> Service management differs by distribution. On systemd hosts, validate the configuration with `sudo logrotate --debug /etc/logrotate.conf` and use the service's supported reload command instead of copying an old `/etc/init.d/...` example unchanged.
+
 Hey there, fellow tech enthusiasts! 👋 
 
 If you've ever managed a server for more than a few weeks, you've probably noticed something: log files have an annoying habit of growing... and growing... and growing until they've eaten up all your disk space. Sound familiar? That's where our hero **logrotate** comes to the rescue!

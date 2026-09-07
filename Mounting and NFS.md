@@ -1,5 +1,7 @@
 # Linux Drive Mounting and NFS Performance Tuning: A Practical Guide
 
+> Benchmarking note: a single `dd` command is not enough to tune NFS and may measure client or server cache instead of storage. Use representative workloads, repeat tests, record latency as well as throughput, and compare against negotiated mount options from `nfsstat -m`. Modern NFS clients generally negotiate suitable `rsize` and `wsize` values automatically.
+
 Hey Linux enthusiasts! 👋 
 
 Today we're diving into two essential system administration topics that every Linux user should master: properly mounting drives and optimizing NFS performance. Whether you're setting up a new storage drive or trying to squeeze more speed out of your network file system, this guide has got you covered!

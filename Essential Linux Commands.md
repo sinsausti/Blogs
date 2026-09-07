@@ -25,8 +25,11 @@ find . ! -name . -prune -name '*' -print0 | xargs -0 grep "texto" /dev/null
 Clean up old files automatically:
 
 ```bash
-# Delete files older than 7 days in current directory
-rm -rf `find -maxdepth 1 -mindepth 1 -mtime +7`
+# Preview regular files older than 7 days in the current directory
+find . -maxdepth 1 -mindepth 1 -type f -mtime +7 -print
+
+# Delete only after reviewing the preview
+find . -maxdepth 1 -mindepth 1 -type f -mtime +7 -delete
 
 # Find and delete files older than one year
 find <directory path> -mtime +365 -and -not -type d -delete
@@ -142,10 +145,11 @@ w | egrep -v '(load|FROM)' | awk '{print $2}' | sed 's/^/tty/' | awk '{print "ec
 # Show MySQL process IDs
 mysql -s -e "show processlist" | awk '{print $1}'
 
-# Monitor MySQL processes continuously
-#!/bin/bash
-while [ 1 ]; do
-    mysql -N -u root -ppassword -e 'show processlist' | grep -v 'show processlist'
+# Monitor MySQL sessions continuously. Configure credentials with
+# `mysql_config_editor set --login-path=monitor ...` first.
+while true; do
+    mysql --login-path=monitor --batch --skip-column-names \
+      -e 'SHOW PROCESSLIST' | grep -v 'SHOW PROCESSLIST'
     sleep 2
 done
 ```
@@ -170,8 +174,9 @@ alias kd='kill_daemon'
 # Change MAC address
 ifconfig eth0 hw ether 00:11:22:33:44:55
 
-# Remove backup files in home directory
-find ~user/ -name "*~" -exec rm {} \;
+# Preview editor backup files before removing them
+find /home/<user> -type f -name '*~' -print
+find /home/<user> -type f -name '*~' -exec rm -i -- {} \;
 
 # Convert DOS line endings to Unix
 perl -pi -e 's/\r\n/\n/g' filename

@@ -15,20 +15,23 @@ Let's walk through creating a swap file step by step. Don't worry, it's easier t
 **⚠️ Important Warning:** Be very careful with this command! It will overwrite anything at the specified path, so double-check your file path.
 
 ```bash
-dd if=/dev/zero of=/swap1 bs=1024 count=2048000
+sudo fallocate -l 2G /swapfile
+sudo chmod 600 /swapfile
 ```
 
-This creates a 2GB swap file. Want a different size? Just change the `count` value:
-- For 1GB: `count=1024000`
-- For 4GB: `count=4096000`
-- For 8GB: `count=8192000`
+If the filesystem does not support `fallocate` for swap files, use `dd` instead:
+
+```bash
+sudo dd if=/dev/zero of=/swapfile bs=1M count=2048 status=progress
+sudo chmod 600 /swapfile
+```
 
 ### Step 2: Format the File for Swap
 
 Now we need to tell Linux this file is meant for swap:
 
 ```bash
-mkswap /swap1 2048000
+sudo mkswap /swapfile
 ```
 
 ### Step 3: Enable the Swap
@@ -36,7 +39,7 @@ mkswap /swap1 2048000
 Time to activate it:
 
 ```bash
-swapon /swap1
+sudo swapon /swapfile
 ```
 
 ### Step 4: Verify It's Working
@@ -60,7 +63,7 @@ Awesome! Your swap is now active.
 Want your swap to automatically activate when you restart? Add it to your system's startup configuration:
 
 ```bash
-echo "/swap1 none swap defaults 0 0" >> /etc/fstab
+printf '%s\n' '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
 ```
 
 ## Fine-Tuning When Swap Gets Used (The Swappiness Setting)
@@ -92,8 +95,8 @@ This tells your system to only use swap when RAM is 90% full. Much more conserva
 If you like your new setting, make it stick:
 
 ```bash
-echo "vm.swappiness = 10" >> /etc/sysctl.conf
-sysctl -p
+printf '%s\n' 'vm.swappiness = 10' | sudo tee /etc/sysctl.d/99-swappiness.conf
+sudo sysctl --system
 ```
 
 ## Swappiness Sweet Spots

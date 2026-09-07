@@ -1,5 +1,7 @@
 # Mastering Nagios: The Complete System Monitoring Guide
 
+> **Version note:** Package versions, download URLs, dependencies, and installation procedures change. Treat the pinned source versions below as examples and verify current releases, checksums, supported operating systems, and installation instructions before deploying them. Prefer distribution packages where their lifecycle fits your requirements.
+
 Hey monitoring enthusiasts! 👀
 
 If you've ever been caught off guard by a server crash or wondered "why didn't anyone notice the website was down?", then Nagios is about to become your new best friend. This battle-tested monitoring system has been keeping sysadmins sane (and employed) for over two decades.
